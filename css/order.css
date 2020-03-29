@@ -1,0 +1,91 @@
+* {
+    margin: 0;
+    padding: 0;
+  }
+.select {
+    border-radius: 5px;
+    height: 25px;
+    width: 250px;
+    margin-right: 50px;
+    border: 1px solid rgb(5, 159, 219);
+}
+.div-title{
+      background-color: rgb(34, 101, 177);
+      height: 50px;  
+  }
+.title-wold{
+     padding-top: 10px;    
+  }
+.div-01{
+      margin-top: 20px;
+      margin-left: 20px;
+  }
+.btn-select{
+      width: 50px;
+      height: 30px;
+      color: aliceblue;
+      background-color:rgb(34, 101, 177);
+      margin-top: 10px;
+}
+.total{
+    margin-top: 10px;
+    margin-left: 20px;
+}
+.hr-01{
+      margin-top: 20px;
+      background-color: #6CA6CD;
+      height: 1px;
+}
+
+.main-left{
+      float: left;
+      width: 50%;
+      margin-top: 20px;
+      margin-left: 20px;
+     
+}
+.total{
+    float: left;
+    width: 15%;
+    margin-left: -100px;
+    margin-top: 20px;
+
+}
+.main-right{
+    width: 20%;
+    float: left;
+    margin-top: 20px;
+
+}
+table.gridtable {
+    font-family: verdana,arial,sans-serif;
+    font-size:11px;
+    color:#333333;
+    border-width: 1px;
+    border-color: #666666;
+    border-collapse: collapse;
+    width: 80%;
+    
+}
+table.gridtable th {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #666666;
+    background-color: #dedede;
+}
+table.gridtable td {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #666666;
+    background-color: #ffffff;
+}
+.num{
+    width: 20px;
+      height: 15px;
+      text-align: center;
+}
+.change a{
+    text-decoration: none;
+}

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>订单管理</title>
+	<script type="text/javascript" src="/js/vue.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/order.css">
+</head>
+<style>
+
+</style>
+<body>
+	<div id="app">
+		<div>
+          <div class="shop">
+			  <shop></shop>
+		  </div>
+
+		</div>
+
+	</div>
+	<script>
+
+
+let Title={
+      template:`
+	  <div>
+	  <div class="div-title">
+			<h2><p class="title-wold">订单管理</p></h2>
+		</div>
+	</div>
+      `
+      
+    }
+
+	 
+let Select={
+	props:['list'],
+      template:`
+	  <div class="div-01">
+		<span> 品牌：</span>
+      <input type="text" v-model="select" class="select" placeholder="请输入名称"></input>
+	  <button type="button"  class="btn-select" @click="search">查询</button>
+	  <hr class="hr-01">
+	  </div>
+	 
+      `,
+	  methods:{
+
+		search: function() {
+					var list;
+					for (let i = 0; i < this.lists.length; i++) {
+						if ((this.lists[i].name == this.select) && this.select != -1) {
+							list = this.lists[i];
+							this.lists.splice(0, this.lists.length);
+							this.lists.push(list);
+						}
+					}
+				},
+	  }
+      
+    }
+
+
+let Table={
+	props:['list'],
+	template:`
+
+			<div class="main-left">
+				<table class="gridtable" style="font-size: 14px;text-align: center;">
+						<tr>
+							<th> <h2>品牌</h2> </th>
+							<th><h2>订单日期</h2></th>
+							<th><h2>订单价格</h2></th>
+							<th><h2>购买数量</h2></th>
+							<th><h2>操作</h2></th>	
+						</tr>
+					    <tr class="item" v-for="item in list" :key="item.id">
+						    <td>{{item.name}}</td>
+						    <td>{{item.time}}</td>
+							<td>{{item.price}}</td>
+						    <td class="change">
+                                <a href="" @click.prevent='sub(item.id)'>－</a>
+                                <input type="text" class="num" :value="item.num" @blur='changeNum(item.id)'/>
+                                <a href="" @click.prevent='add(item.id)'>＋</a>
+						    </td>
+						    <td>
+							 <button @click="del(item.id)">删除</button>
+							</td>
+					    </tr>
+				</table>	
+			</div>
+			
+	`,
+	methods:{
+        del:function(id){
+          this.$emit('shop-del',id);
+        },
+        sub:function(id){
+            this.$emit('change-num',{
+              id:id,
+              type:'sub'
+            })
+        },
+        add:function(id){
+           this.$emit('change-num',{
+             id:id,
+             type:'add'
+           })
+        }
+      }
+}
+
+
+let Total={
+       props:['list'],
+      template:`
+    <div class="total">
+          <span>总价：{{totalPrice}}</span>
+     </div>`
+     ,
+     computed:{
+     totalPrice:function(){
+       let price=0;
+       this.list.forEach(item =>{
+         price+=item.price*item.num;
+       });
+       return price;
+     }
+
+     }
+}
+
+
+
+let Insert={
+props:['list'],
+template:`
+<div>
+<div class="main-right">
+				<h2>新增订单</h2>
+				<span >品牌：</span>
+				<input style="margin-top: 10px;" type="text" class="select" v-model="name" placeholder="如：笔记本、手机" />
+				<br>
+				<span >价格：</span>
+				<input style="margin-top: 10px;" type="text" class="select" v-model="price" placeholder="如：100" />
+				<br>
+				<span>数量：</span>
+				<input style="margin-top: 10px;" type="text" class="select" v-model="num" placeholder="如：10" />
+				<br>
+				<button  class="btn-select" @click="save">提交</button>
+			</div>
+		</div>
+
+`,
+methods: {
+	save:function(){
+          this.$emit('shop-insert');
+        }
+	}
+
+}
+
+
+Vue.component('shop',{
+  data:function(){
+     return{
+		 
+       list:[
+         {
+			id:1,
+			name: 'OPPOr19',
+			time: '2020-3-29',
+			price: '3999',
+			num: '1',
+       },
+	   {
+	     	id:2,
+			name: '华为mate30',
+			time: '2020-3-29',
+			price: '4999',
+			num: '1',
+       },
+	   {
+		    id:3,
+			name: 'vivoX30',
+			time: '2020-3-29',
+			price: '3999',
+			num: '1',
+       },
+	   ]
+
+	 }
+
+  },
+  components:{
+	'shop-title':Title,
+    'shop-select':Select,
+    'shop-table':Table,
+    'shop-total':Total,
+	'shop-insert':Insert
+  },
+  template:`
+
+  <div  class="shop">
+	    <shop-title></shop-title>
+        <shop-select :list='list' ></shop-select>
+        <shop-table  :list='list' @shop-del='deleteCart($event)' @change-num="changeNum"></shop-table>
+		<shop-total  :list='list' ></shop-total>
+		<shop-insert :list='list' @shop-insert="insertShop($event)"></shop-insert>
+  </div>
+  `,
+  methods:{
+    changeNum:function(val){
+       if(val.type == 'sub'){
+         this.list.some(item =>{
+           if(item.id===val.id){
+               if(item.num==1){
+                 alert("不能再减少了")
+                 return true;
+               }
+               item.num-=1;
+               return true;
+           }
+         })
+       }
+      else if(val.type == 'add'){
+         this.list.some(item =>{
+           if(item.id===val.id){
+            item.num+=1;
+               return true;
+           }
+         }) 
+       }
+    },
+        deleteCart:function(id){
+         let index = this.list.findIndex(item=>{
+           return item.id==id;
+         })
+         this.list.splice(index,1);
+
+        },
+		insertShop:function(){
+	       // 添加订单对象
+				
+						var date = new Date();
+					var sep = "-";
+					var year = date.getFullYear();
+					var month = date.getMonth() + 1;
+					var strDate = date.getDate();
+					if (month >= 1 && month <= 9) {
+						month = "0" + month;
+					}
+					if (strDate >= 0 && strDate <= 9) {
+						strDate = "0" + strDate;
+					}
+					var current= year + sep + month + sep + strDate + - +date.getHours() + ":" + date.getMinutes();
+					this.lists.push({
+						name: this.name,
+						time: current,
+						price: this.price,
+						num: this.num,
+					})
+					},
+
+		
+  }
+
+  }
+  )
+	var app = new Vue({
+			el: '#app',
+			
+			})
+	</script>
+</body>
+</html>
+		
+
+		
